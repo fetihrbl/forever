@@ -1,22 +1,20 @@
 import jwt from "jsonwebtoken";
-import User from "../models/userModel.js";
 
-export const protect = async (req, res, next) => {
-  let token;
+export const authMiddleware = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
 
-  if (req.headers.authorization?.startsWith("Bearer")) {
-    token = req.headers.authorization.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "Token bulunamadı" });
   }
-
-  if (!token) return res.status(401).json({ message: "Not authorized" });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    req.user = await User.findById(decoded.id).select("-password");
+    // userId’yi req içine ekliyoruz → controller direkt kullanır
+    req.user = { id: decoded.id, role: decoded.role };
 
     next();
   } catch (err) {
-    res.status(401).json({ message: "Token failed" });
+    return res.status(401).json({ message: "Token geçersiz" });
   }
 };

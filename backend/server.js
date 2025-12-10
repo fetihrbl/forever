@@ -6,6 +6,7 @@ import connectCloudinary from "./config/cloudinary.js";
 import userRouter from './routes/userRoute.js';
 import productRouter from './routes/productRoute.js';
 import cartRoutes from "./routes/cartRoute.js";
+import orderRoutes from "./routes/orderRoute.js";
 
 // App Config
 const app = express();
@@ -30,6 +31,7 @@ const startServer = async () => {
     app.use('/api/user', userRouter);
     app.use('/api/product', productRouter);
     app.use("/api/cart", cartRoutes);
+    app.use("/api/orders", orderRoutes);
 
     // -------------------
     // Server Listen

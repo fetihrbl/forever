@@ -1,12 +1,16 @@
 import express from "express";
-import { addToCart, updateCart, removeFromCart, getUserCart } from "../controllers/cartController.js";
-import { protect } from "../middlewares/authMiddleware.js";
+import { addToCart, updateCart, getUserCart } from "../controllers/cartController.js";
+import {authMiddleware} from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/add", protect, addToCart);
-router.put("/update", protect, updateCart);
-router.delete("/remove", protect, removeFromCart);
-router.get("/", protect, getUserCart);
+// Sepete ürün ekleme
+router.post("/add", authMiddleware, addToCart);
+
+// Sepet güncelleme (miktar arttır / azalt)
+router.post("/update", authMiddleware, updateCart);
+
+// Kullanıcının sepetini çekme
+router.get("/get", authMiddleware, getUserCart);
 
 export default router;

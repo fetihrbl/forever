@@ -9,6 +9,7 @@ const Navbar = () => {
 
   const { setShowSearch, getCartCount, navigate, token, setToken } = useContext(ShopContext);
 
+
   // Sidebar menü items
   const menuItems = [
     { name: "HOME", path: "/" },
@@ -72,12 +73,18 @@ const Navbar = () => {
 </div>
         </div>
 
-        <Link to="/cart" className="relative">
-          <img src={assets.cart_icon} alt="cart_icon" className="w-5 min-w-5" />
-          <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
-            {getCartCount()}
-          </p>
-        </Link>
+        <Link 
+  to="/cart" 
+  className="relative"
+  onClick={() => {
+    if (typeof getUserCart === "function") getUserCart();
+  }}
+>
+  <img src={assets.cart_icon} alt="cart_icon" className="w-5 min-w-5" />
+  <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
+    {typeof getCartCount === "function" ? getCartCount() : 0}
+  </p>
+</Link>
 
         {/* Mobile menu button */}
         <img
