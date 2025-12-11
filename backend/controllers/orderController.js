@@ -7,7 +7,8 @@ import Cart from "../models/cartModel.js";
 export const createOrder = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { items, amount, address } = req.body;
+
+    const { items, amount, address, paymentMethod } = req.body;
 
     if (!items || items.length === 0) {
       return res.status(400).json({ message: "No items in order" });
@@ -18,20 +19,21 @@ export const createOrder = async (req, res) => {
       items,
       amount,
       address,
+      paymentMethod,     
       status: "processing",
       paymentStatus: "pending",
     });
 
-    // Clear the user's cart after order creation
+    // Clear Cart
     await Cart.findOneAndUpdate(
       { userId },
       { $set: { items: [] } },
       { new: true }
     );
 
-    res.json({ success: true, order });
+    return res.json({ success: true, order });
   } catch (error) {
-    res.status(500).json({ message: "Failed to create order", error });
+    return res.status(500).json({ message: "Failed to create order", error });
   }
 };
 
@@ -46,9 +48,9 @@ export const getUserOrders = async (req, res) => {
       .sort({ createdAt: -1 })
       .populate("items.productId");
 
-    res.json({ success: true, orders });
+    return res.json({ success: true, orders });
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch user orders" });
+    return res.status(500).json({ message: "Failed to fetch user orders" });
   }
 };
 
@@ -62,9 +64,9 @@ export const getAllOrders = async (req, res) => {
       .populate("userId", "name email")
       .populate("items.productId");
 
-    res.json({ success: true, orders });
+    return res.json({ success: true, orders });
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch all orders" });
+    return res.status(500).json({ message: "Failed to fetch all orders" });
   }
 };
 
@@ -85,8 +87,8 @@ export const updateOrderStatus = async (req, res) => {
       { new: true }
     );
 
-    res.json({ success: true, order });
+    return res.json({ success: true, order });
   } catch (error) {
-    res.status(500).json({ message: "Failed to update order status" });
+    return res.status(500).json({ message: "Failed to update order status" });
   }
 };

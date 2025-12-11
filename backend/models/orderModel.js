@@ -15,6 +15,8 @@ const orderSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
+        name: { type: String, required: true },     
+        price: { type: Number, required: true },    
         size: { type: String, required: true },
         quantity: { type: Number, required: true },
       },
@@ -34,6 +36,8 @@ const orderSchema = new mongoose.Schema(
       postalCode: { type: String, required: true },
       country: { type: String, required: true },
     },
+
+    paymentMethod: { type: String, required: true },
 
     status: {
       type: String,

@@ -11,15 +11,26 @@ const Product = () => {
   const [productData, setProductData] = useState(null);
   const [mainImage, setMainImage] = useState("");
   const [size, setSize] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // Sayfa yenilenmiş gibi state’leri sıfırla
+    setProductData(null);
+    setMainImage("");
+    setSize("");
+    setLoading(false);
+  
+    // Yeni ürünü yükle
     const product = products.find((item) => item._id === productId);
     if (product) {
       setProductData(product);
       setMainImage(product.images?.[0]?.url);
     }
+  
+    // Sayfanın en üstüne kaydır
+    window.scrollTo(0, 0);
   }, [productId, products]);
-
+  
   if (!productData) return null; // if you don't habe data
 
   return (
@@ -79,13 +90,18 @@ const Product = () => {
             </div>
           </div>
           <button
-  onClick={() => {
-    addToCart(productData._id, size);
-  }}
-  className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700 cursor-pointer"
->
-  ADD TO CART
-</button>
+            onClick={async () => {
+              setLoading(true);
+              await addToCart(productData._id, size);
+              setLoading(false);
+            }}
+            disabled={loading}
+            className={`bg-black text-white px-8 py-3 text-sm active:bg-gray-700 cursor-pointer
+    ${loading ? "opacity-50 cursor-not-allowed" : ""}
+  `}
+          >
+            {loading ? "Ekleniyor..." : "ADD TO CART"}
+          </button>
           <hr className="mt-8 sm:w-4/5 " />
           <div className="text-sm text-gray-500 mt-5 flex flex-col gap-1">
             <p>100% Original poduct.</p>

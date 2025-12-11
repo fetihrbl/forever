@@ -7,8 +7,8 @@ import { ShopContext } from "../context/ShopContext.jsx";
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
 
-  const { setShowSearch, getCartCount, navigate, token, setToken } = useContext(ShopContext);
-
+  const { setShowSearch, getCartCount, navigate, token, setToken } =
+    useContext(ShopContext);
 
   // Sidebar menü items
   const menuItems = [
@@ -58,33 +58,52 @@ const Navbar = () => {
             src={assets.profile_icon}
             alt="profile_icon"
             className="w-5 cursor-pointer"
-            onClick={() => token ? null : navigate('login')}
+            onClick={() => (token ? null : navigate("login"))}
           />
-         <div className={`${token ? "group-hover:block hidden" : "hidden"} absolute right-0 pt-4`}>
-  <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
-    {token && (
-      <>
-        <p className="cursor-pointer hover:text-black" onClick={() => navigate("/profile")}>My Profile</p>
-        <p className="cursor-pointer hover:text-black" onClick={() => navigate("/orders")}>Orders</p>
-        <p className="cursor-pointer hover:text-black" onClick={handleLogout}>Logout</p>
-      </>
-    )}
-  </div>
-</div>
+          <div
+            className={`${
+              token ? "group-hover:block hidden" : "hidden"
+            } absolute right-0 pt-4`}
+          >
+            <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
+              {token && (
+                <>
+                  <p
+                    className="cursor-pointer hover:text-black"
+                    onClick={() => navigate("/profile")}
+                  >
+                    My Profile
+                  </p>
+                  <p
+                    className="cursor-pointer hover:text-black"
+                    onClick={() => navigate("/orders")}
+                  >
+                    Orders
+                  </p>
+                  <p
+                    className="cursor-pointer hover:text-black"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </p>
+                </>
+              )}
+            </div>
+          </div>
         </div>
 
-        <Link 
-  to="/cart" 
-  className="relative"
-  onClick={() => {
-    if (typeof getUserCart === "function") getUserCart();
-  }}
->
-  <img src={assets.cart_icon} alt="cart_icon" className="w-5 min-w-5" />
-  <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
-    {typeof getCartCount === "function" ? getCartCount() : 0}
-  </p>
-</Link>
+        <Link
+          to="/cart"
+          className="relative"
+          onClick={() => {
+            if (typeof getUserCart === "function") getUserCart();
+          }}
+        >
+          <img src={assets.cart_icon} alt="cart_icon" className="w-5 min-w-5" />
+          <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
+            {typeof getCartCount === "function" ? getCartCount() : 0}
+          </p>
+        </Link>
 
         {/* Mobile menu button */}
         <img
@@ -129,12 +148,44 @@ const Navbar = () => {
           <div className="flex flex-col pl-6 pt-4">
             {token ? (
               <>
-                <p className="py-2 cursor-pointer" onClick={() => { navigate("/profile"); setVisible(false); }}>My Profile</p>
-                <p className="py-2 cursor-pointer" onClick={() => { navigate("/orders"); setVisible(false); }}>Orders</p>
-                <p className="py-2 cursor-pointer" onClick={() => { handleLogout(); setVisible(false); }}>Logout</p>
+                <p
+                  className="py-2 cursor-pointer"
+                  onClick={() => {
+                    navigate("/profile");
+                    setVisible(false);
+                  }}
+                >
+                  My Profile
+                </p>
+                <p
+                  className="py-2 cursor-pointer"
+                  onClick={() => {
+                    navigate("/orders");
+                    setVisible(false);
+                  }}
+                >
+                  Orders
+                </p>
+                <p
+                  className="py-2 cursor-pointer"
+                  onClick={() => {
+                    handleLogout();
+                    setVisible(false);
+                  }}
+                >
+                  Logout
+                </p>
               </>
             ) : (
-              <p className="py-2 cursor-pointer" onClick={() => { navigate("/login"); setVisible(false); }}>Login</p>
+              <p
+                className="py-2 cursor-pointer"
+                onClick={() => {
+                  navigate("/login");
+                  setVisible(false);
+                }}
+              >
+                Login
+              </p>
             )}
           </div>
         </div>
