@@ -4,7 +4,7 @@ import { ShopContext } from "../context/ShopContext";
 import { toast } from "react-toastify";
 
 const PlaceOrder = () => {
-  const { cartItems, getCartTotal, navigate, backendUrl, token } =
+  const { cartItems, getCartTotal, navigate, backendUrl, token, setCartItems } =
     useContext(ShopContext);
 
   const [method, setMethod] = useState("credit");
@@ -119,6 +119,7 @@ const PlaceOrder = () => {
   
       if (res.data.success) {
         toast.success("Sipariş oluşturuldu!");
+        setCartItems([]);
         navigate("/orders");
       } else {
         toast.error(res.data.message || "Sipariş oluşturulamadı");
@@ -126,8 +127,7 @@ const PlaceOrder = () => {
     } catch (err) {
       toast.error("Sipariş gönderilemedi");
       console.log(err);
-    }
-  
+    } 
     setLoading(false);
   };
   

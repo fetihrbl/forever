@@ -58,37 +58,52 @@ export const getUserOrders = async (req, res) => {
 // Admin: Get All Orders
 // -------------------------------------------
 export const getAllOrders = async (req, res) => {
-  try {
-    const orders = await Order.find()
-      .sort({ createdAt: -1 })
-      .populate("userId", "name email")
-      .populate("items.productId");
-
-    return res.json({ success: true, orders });
-  } catch (error) {
-    return res.status(500).json({ message: "Failed to fetch all orders" });
-  }
-};
+    try {
+      const page = parseInt(req.query.page) || 1;     // kaçıncı sayfa
+      const limit = parseInt(req.query.limit) || 10;  // sayfa başı kaç tane
+      const skip = (page - 1) * limit;
+  
+      const total = await Order.countDocuments(); // toplam sipariş
+      const orders = await Order.find()
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 })
+        .populate("userId", "name email")
+        .populate("items.productId");
+  
+      return res.json({
+        success: true,
+        orders,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+        totalOrders: total,
+      });
+    } catch (error) {
+      return res.status(500).json({ message: "Failed to fetch orders" });
+    }
+  };
 
 // -------------------------------------------
 // Admin: Update Order Status
 // -------------------------------------------
 export const updateOrderStatus = async (req, res) => {
-  try {
-    const { orderId, status } = req.body;
-
-    if (!orderId || !status) {
-      return res.status(400).json({ message: "orderId and status required" });
+    try {
+      const orderId = req.params.orderId;  
+      const { status } = req.body;
+  
+      if (!status) {
+        return res.status(400).json({ message: "Status required" });
+      }
+  
+      const order = await Order.findByIdAndUpdate(
+        orderId,
+        { status },
+        { new: true }
+      );
+  
+      return res.json({ success: true, order });
+    } catch (error) {
+      return res.status(500).json({ message: "Failed to update order status" });
     }
-
-    const order = await Order.findByIdAndUpdate(
-      orderId,
-      { status },
-      { new: true }
-    );
-
-    return res.json({ success: true, order });
-  } catch (error) {
-    return res.status(500).json({ message: "Failed to update order status" });
-  }
-};
+  };
+  
