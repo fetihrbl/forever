@@ -7,6 +7,8 @@ import userRouter from './routes/userRoute.js';
 import productRouter from './routes/productRoute.js';
 import cartRoutes from "./routes/cartRoute.js";
 import orderRoutes from "./routes/orderRoute.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
+
 
 // App Config
 const app = express();
@@ -14,6 +16,7 @@ const port = process.env.PORT || 4000;
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // -------------------
@@ -32,6 +35,7 @@ const startServer = async () => {
     app.use('/api/product', productRouter);
     app.use("/api/cart", cartRoutes);
     app.use("/api/orders", orderRoutes);
+    app.use("/api/payments", paymentRoutes);
 
     // -------------------
     // Server Listen

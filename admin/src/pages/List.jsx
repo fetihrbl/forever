@@ -92,7 +92,7 @@ const List = ({ token }) => {
             <div className="flex justify-end md:justify-center">
               <button
                 onClick={() => deleteProduct(item._id)}
-                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm cursor-pointer"
+                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm cursor-pointer"
               >
                 Delete
               </button>

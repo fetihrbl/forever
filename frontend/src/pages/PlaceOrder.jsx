@@ -23,65 +23,10 @@ const PlaceOrder = () => {
 
   // BACKEND'E ORDER GÖNDERME
   const handleOrder = async () => {
-    // --- VALIDATION CHECKS ---
-  
-    // 1) Kullanıcı login mi?
     if (!token) {
       toast.error("Lütfen giriş yapın");
       return;
     }
-  
-    // 2) İsim
-    if (!form.firstName || !form.lastName) {
-      toast.error("Lütfen ad ve soyad girin");
-      return;
-    }
-  
-    // 3) Email
-    if (!form.email) {
-      toast.error("E-posta adresi boş bırakılamaz");
-      return;
-    }
-  
-    // 4) Telefon
-    if (!form.phone) {
-      toast.error("Telefon numarası gereklidir");
-      return;
-    }
-  
-    // 5) Adres satırı
-    if (!form.address) {
-      toast.error("Adres bilgisi eksik");
-      return;
-    }
-  
-    // 6) Şehir
-    if (!form.city) {
-      toast.error("Şehir alanı boş bırakılamaz");
-      return;
-    }
-  
-    // 7) Ülke
-    if (!form.country) {
-      toast.error("Ülke seçilmelidir");
-      return;
-    }
-  
-    // 8) Ödeme yöntemi
-    if (!method) {
-      toast.error("Lütfen bir ödeme yöntemi seçin");
-      return;
-    }
-  
-    // 9) Sepet boş mu?
-    if (!cartItems || cartItems.length === 0) {
-      toast.error("Sepetiniz boş");
-      return;
-    }
-  
-    // -----------------------------------
-    // VALIDATION GEÇTİ → ORDER GÖNDER
-    // -----------------------------------
   
     setLoading(true);
   
@@ -106,32 +51,42 @@ const PlaceOrder = () => {
           postalCode: form.postalCode || "00000",
           country: form.country,
         },
-        paymentMethod: method,
+        paymentMethod: "iyzico",
       };
   
-      const res = await axios.post(
+      // 1️⃣ ORDER OLUŞTUR
+      const orderRes = await axios.post(
         `${backendUrl}/api/orders/create`,
         orderData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
   
-      if (res.data.success) {
-        toast.success("Sipariş oluşturuldu!");
-        setCartItems([]);
-        navigate("/orders");
-      } else {
-        toast.error(res.data.message || "Sipariş oluşturulamadı");
+      if (!orderRes.data.success) {
+        toast.error("Sipariş oluşturulamadı");
+        setLoading(false);
+        return;
       }
+  
+      const orderId = orderRes.data.orderId;
+  
+      // 2️⃣ IYZICO ÖDEME BAŞLAT
+      const paymentRes = await axios.post(
+        `${backendUrl}/api/payments/iyzico/create`,
+        { orderId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+  
+      // 3️⃣ IYZICO SAYFASINA YÖNLENDİR
+      window.location.href = paymentRes.data.paymentPageUrl;
+  
     } catch (err) {
-      toast.error("Sipariş gönderilemedi");
+      toast.error("Ödeme başlatılamadı");
       console.log(err);
-    } 
+    }
+  
     setLoading(false);
   };
   
-
   return (
     <div className="w-full flex flex-col md:flex-row gap-10">
       {/* LEFT - ADDRESS FORM */}

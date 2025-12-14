@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { backendUrl, currency } from "../App";
 import { toast } from "react-toastify";
+import { assets } from "../assets/admin_assets/assets";
 
 const Orders = ({ token }) => {
   const [orders, setOrders] = useState([]);
@@ -61,10 +62,13 @@ const Orders = ({ token }) => {
 
   return (
     <div>
+      <div className="flex flex-row gap-2">
+      <img src={assets.parcel_icon} alt="parcel_icon" className="w-8 h-8"/>
       <h1 className="text-2xl font-bold mb-6">Tüm Siparişler</h1>
+      </div>
 
       {/* ---- TOP BAR PAGINATION ---- */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="justify-between items-center mb-4 hidden sm:flex">
         <p className="text-gray-700">
           Toplam Sayfa: <b>{totalPages}</b>
         </p>
@@ -75,10 +79,10 @@ const Orders = ({ token }) => {
             disabled={currentPage === 1}
             onClick={() => fetchOrders(currentPage - 1)}
           >
-            ← Önceki
+            ← 
           </button>
 
-          <span>
+          <span className="whitespace-nowrap">
             Sayfa <b>{currentPage}</b> / {totalPages}
           </span>
 
@@ -87,7 +91,7 @@ const Orders = ({ token }) => {
             disabled={currentPage === totalPages}
             onClick={() => fetchOrders(currentPage + 1)}
           >
-            Sonraki →
+             →
           </button>
         </div>
       </div>

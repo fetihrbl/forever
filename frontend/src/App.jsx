@@ -14,6 +14,9 @@ import SearchBar from "./components/SearchBar.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SignUp from "./pages/Sign-up.jsx";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentFailed from "./pages/PaymentFailed";
+
 
 
 function App() {
@@ -40,6 +43,8 @@ function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-failed" element={<PaymentFailed />} />
         <Route path="*" element={<h1>404 - Sayfa Bulunamadı</h1>} />
       </Routes>
       <Footer />

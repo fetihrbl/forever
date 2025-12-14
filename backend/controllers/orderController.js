@@ -7,7 +7,6 @@ import Cart from "../models/cartModel.js";
 export const createOrder = async (req, res) => {
   try {
     const userId = req.user.id;
-
     const { items, amount, address, paymentMethod } = req.body;
 
     if (!items || items.length === 0) {
@@ -19,7 +18,7 @@ export const createOrder = async (req, res) => {
       items,
       amount,
       address,
-      paymentMethod,     
+      paymentMethod,
       status: "processing",
       paymentStatus: "pending",
     });
@@ -27,15 +26,21 @@ export const createOrder = async (req, res) => {
     // Clear Cart
     await Cart.findOneAndUpdate(
       { userId },
-      { $set: { items: [] } },
-      { new: true }
+      { $set: { items: [] } }
     );
 
-    return res.json({ success: true, order });
+    return res.json({
+      success: true,
+      orderId: order._id, // 👈 KRİTİK SATIR
+    });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to create order", error });
+    return res.status(500).json({
+      message: "Failed to create order",
+      error,
+    });
   }
 };
+
 
 // -------------------------------------------
 // Get Orders of Logged In User
